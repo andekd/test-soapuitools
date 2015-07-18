@@ -22,8 +22,11 @@ import java.net.URL;
 import java.nio.file.Paths;
 
 public class DataDrivenTestsUtil {
+	@SuppressWarnings("unused")
 	private org.apache.log4j.Logger log = null;
+	@SuppressWarnings("unused")
 	private MockTestRunner testRunner = null;
+	@SuppressWarnings("unused")
 	private MockTestRunContext context = null;
 	public DataDrivenTestsUtil(Logger log, MockTestRunner testRunner, MockTestRunContext context) {
 		super();
@@ -49,11 +52,14 @@ public class DataDrivenTestsUtil {
 		//SettingsConfig myHttpReqSettingsCfg = httpReqCfg.getSettings();
 		// Add the step to current testcase
 		WsdlTestStep setupStep = inTestCase.addTestStep(groovySetupCfg);
+		@SuppressWarnings("unused")
 		WsdlTestStep valuesStep = inTestCase.addTestStep(propValuesCfg);
+		@SuppressWarnings("unused")
 		WsdlTestStep answersStep = inTestCase.addTestStep(propAnswersCfg);
 		// http request will be added with this endpoint and method GET
 		//String endPoint = "http://localhost:3000/users/?name=${#TestCase#value}";
 		//WsdlTestStep httpReqStep = inTestCase.addTestStep("httprequest", "MyHttpReq", endPoint, "Get");
+		@SuppressWarnings("unused")
 		WsdlTestStep httpReqStep = inTestCase.addTestStep(httpReqCfg);
 		WsdlTestStep loopStep = inTestCase.addTestStep(groovyLoopCfg);
 
