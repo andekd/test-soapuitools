@@ -2,3 +2,4 @@
 /target/*shaded*
 /target/classes/
 /target/maven-archiver/
+/target/
