@@ -1,1 +1,4 @@
-/target/
+/target/original-*
+/target/*shaded*
+/target/classes/
+/target/maven-archiver/
