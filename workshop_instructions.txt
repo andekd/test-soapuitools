@@ -1,0 +1,59 @@
+1. Setup test server
+  To test our soapui addons we need something to test against.
+  Here json-server is a great help for installing a REST-server locally.
+  Json-server is fast and simple to control output from.
+   - On windows you need to install node-js + npm first, see http://blog.teamtreehouse.com/install-node-js-npm-windows
+  Download and follow instructions from: https://github.com/typicode/json-server
+  - On windows your json-server will be installed in the Roaming directory of your current user
+  - In my case this was: C:\Users\Anders\AppData\Roaming\npm
+  - You now need to add this directory to your PATH environment variable (or use full pathname when starting json-server)
+  - setx PATH "%PATH%;C:\Users\Anders\AppData\Roaming\npm"
+  - !! NB !! PATH can  only be 1024 characters, watch so you dont get 'truncated warning'
+    + Then you have to edit in registry directly, see http://superuser.com/questions/387619/overcoming-the-1024-character-limit-with-setx
+
+2. Install latest SoapUI (curerntly 5.2), see http://www.soapui.org/
+
+3. Install Git, if you don't already have it installed. https://git-scm.com/book/en/v2/Getting-Started-Installing-Git
+
+4. Clone this repo to your pc. Se options on rigth side of the github page.
+ - Or open cmd (gitshell or powershell), go to directory where you want your repo to be placed and give cmd:
+ - git clone https://github.com/andekd/test-soapuitools.git . (dont forgett the last dot '.' in the cmd)
+
+5. If you want to build the jar-file you need to have maven installed. https://maven.apache.org/install.html
+   Otherwise the latest checked in jar is available in /soapuiutil/target
+
+6. Copy the soapuiutil-0.0.1.jar file to your soapui's installation-lib folder, in my case:
+   C:\Program Files\SmartBear\SoapUI-5.2.0\lib.
+
+7. Get java api for reading excel-files from http://mirrors.ibiblio.org/pub/mirrors/maven/net.sourceforge.jexcelapi/jars/jxl-2.6.jar
+   Anv copy it to soapui's installation-lib folder.
+   !! NB !! Dont forget to restart Soapui (if you had it started already), to read the newly copied api
+
+8   Start json-server with javascript users.js, you will find this under the folder 'external' in your newly cloned git-repo.
+    Start cmd: json-server users.js
+
+9.  Start Soapui, create new projet/testsuit/testcase. In the new testcase create a script teststep. Disable this step, only used for testcase population.
+    Add following groovy code to your script:
+    
+    import se.cag.test.soapui.DataDrivenTestsUtil
+    DataDrivenTestsUtil myDdUtil = new DataDrivenTestsUtil (log, testRunner, context)
+    myDdUtil.create1DTestSteps(testRunner.testCase, "Users.xls")
+
+10. Save your testcase. In the folder where you saved the testcase copy the testdata excelfile from /target/Users.xls.
+    (Has to be excel97 format, otherwise soapui can't read it).
+
+11. In Soapui run your newly created groovy script (just click ok in the http request step popup). The testcase will now be populated with several teststeps.
+
+12. Add endpoint "http://localhost:3000/users/${#TestCase#value}" to the 'MyHttpReq' and save the testcase
+
+13. The testcase should now be runable. Dubble-click on testcase to get testcase window open and click run.
+
+14. Appropriate assertions must be added to the 'MyHttpReq' otherwise this is it.
+
+
+
+
+
+
+
+
