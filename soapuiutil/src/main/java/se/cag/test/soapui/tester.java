@@ -17,7 +17,7 @@ public class tester {
     	DataDrivenTestsUtil t1 = new DataDrivenTestsUtil();
     	System.out.println(t1.getExecDir());
     	System.out.println(t1.getCompleteFileName());
-    	t1.printScript();
+    	t1.printScript();  
     	//System.out.println(t1.getScript());
     	
     	
