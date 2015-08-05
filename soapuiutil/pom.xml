@@ -11,12 +11,12 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
   </properties>
  
-  <!-- <repositories>
+  <repositories>
   	<repository>
-    	<id>smartbear-sweden-repository</id>
-        <url>http://www.soapui.org/repository/maven2</url>
+    	<id>smartbear-repository</id>
+        <url>http://smartbearsoftware.com/repository/maven2/com/smartbear/soapui/soapui</url>
     </repository>
-  </repositories> -->
+  </repositories>
   
   <dependencies>
   	<dependency>
@@ -27,7 +27,7 @@
   	<dependency>
   		<groupId>com.smartbear.soapui</groupId>
   		<artifactId>soapui</artifactId>
-  		<version>5.1.2</version>
+  		<version>5.2.0</version>
 	</dependency>
   </dependencies>
   <build>
