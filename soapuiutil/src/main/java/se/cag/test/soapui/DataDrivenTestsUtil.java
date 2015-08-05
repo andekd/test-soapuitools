@@ -169,15 +169,15 @@ public class DataDrivenTestsUtil {
 	}
 	public String getCompleteFileName() {
 		String fname = "Tji fick du!";
-		fname = Paths.get("loop.script").toString();
+		fname = Paths.get("Setup 1D.groovy").toString();
 		return fname;
 	}
 	public String getClassPath() {
-		URL myUrl = DataDrivenTestsUtil.class.getResource("loop.script");
+		URL myUrl = DataDrivenTestsUtil.class.getResource("/external/users.js");
 		return myUrl.toString();
 	}
 	public void printScript() {
-		InputStream myStream = DataDrivenTestsUtil.class.getResourceAsStream("loop.script");
+		InputStream myStream = DataDrivenTestsUtil.class.getResourceAsStream("/external/Setup 1D.groovy.script");
 		System.out.println(getStringFromInputStream(myStream));
 	}
 
