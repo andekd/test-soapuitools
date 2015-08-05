@@ -2,6 +2,7 @@ package se.cag.test.soapui;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -169,7 +170,7 @@ public class DataDrivenTestsUtil {
 	}
 	public String getCompleteFileName() {
 		String fname = "Tji fick du!";
-		fname = Paths.get("Setup 1D.groovy").toString();
+		fname = Paths.get("/exxxxxternal/users.js").toString();
 		return fname;
 	}
 	public String getClassPath() {
@@ -177,13 +178,28 @@ public class DataDrivenTestsUtil {
 		return myUrl.toString();
 	}
 	public void printScript() {
-		InputStream myStream = DataDrivenTestsUtil.class.getResourceAsStream("/external/Setup 1D.groovy.script");
-		System.out.println(getStringFromInputStream(myStream));
+		InputStream in = this.getClass().getClassLoader().getResourceAsStream("Increment and Loop.groovy");
+		if (in == null) {
+			System.out.println("Not found");
+		} else {
+			System.out.println(getStringFromInputStream(in));
+		}
 	}
 
-	public String getScript() {
-		InputStream myStream = DataDrivenTestsUtil.class.getResourceAsStream("loop.script");
-		return getStringFromInputStream(myStream); 
+	public String getScriptAbsolute() {
+		//String rootpath
+		InputStream myStream = null;
+		try {
+			myStream = new FileInputStream("C:/Users/Anders/Documents/GitHub/test-soapuitools/soapuiutil/external/users.js");
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		if (myStream == null) {
+			return "Not found";
+		} else {
+			return getStringFromInputStream(myStream);
+		}
 	}
 
 	private String getStringFromInputStream(InputStream is) {
