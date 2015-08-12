@@ -188,7 +188,7 @@ public class DataDrivenTestsUtil {
 		}
 	}	
 	public String getScriptAsString(String scriptName) {
-		InputStream in = this.getClass().getClassLoader().getResourceAsStream("scriptName");
+		InputStream in = this.getClass().getClassLoader().getResourceAsStream(scriptName);
 		if (in == null) {
 			return ("Script " + scriptName + " Not found");
 		} else {
@@ -208,7 +208,10 @@ public class DataDrivenTestsUtil {
 		if (myStream == null) {
 			return "Not found";
 		} else {
-			return getStringFromInputStream(myStream);
+			String theScript = getStringFromInputStream(myStream);
+			theScript = theScript.replaceAll("\\n", "\n");
+			theScript = theScript.replaceAll("\\r", "\n");
+			return theScript;
 		}
 	}
 
@@ -216,13 +219,13 @@ public class DataDrivenTestsUtil {
 
 		BufferedReader br = null;
 		StringBuilder sb = new StringBuilder();
-
+		String lineEnding = System.getProperty("line.separator");
 		String line;
 		try {
 
 			br = new BufferedReader(new InputStreamReader(is));
 			while ((line = br.readLine()) != null) {
-				sb.append(line);
+				sb.append(line + lineEnding);
 			}
 
 		} catch (IOException e) {
