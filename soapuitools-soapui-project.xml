@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:soapui-project id="7bd561c8-328a-4852-803a-ad5af56f5b7f" activeEnvironment="Default" name="soapuitools" resourceRoot="" soapui-version="5.6.0" abortOnError="false" runType="SEQUENTIAL" xmlns:con="http://eviware.com/soapui/config"><con:settings/><con:testSuite id="a2da5186-a0d9-4a6e-b5d1-a9061dd71af5" name="TestSuite 1"><con:settings/><con:runType>SEQUENTIAL</con:runType><con:testCase id="1cad1097-7916-440e-b7cb-b7c0b13af3a0" failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0" name="TestCase 1" searchProperties="true"><con:settings/><con:testStep type="groovy" name="Setup 1D" id="c9839a4f-7742-4902-ba2d-54a84bf7946f"><con:settings/><con:config><script>import java.io.File
+import jxl.Workbook
+import jxl.write.WritableWorkbook
+
+def projDir = context.expand('${projectDir}')
+def excelFileName = projDir + "\\Names.xls"
+def Values = testRunner.testCase.getTestStepByName("Values")
+//Remove old properties first
+def ValuesPropNames = Values.getPropertyNames() 
+ValuesPropNames.each {name ->
+ Values.removeProperty(name)
+}
+def Answers = testRunner.testCase.getTestStepByName("Answers")
+//Remove old properties first
+def AnswersPropNames = Answers.getPropertyNames()
+AnswersPropNames.each {name ->
+ Answers.removeProperty(name)
+}
+
+wb = Workbook.getWorkbook(new File(excelFileName))
+sheet = wb.getSheet(0)
+
+def int lastRow = sheet.getRows() -1
+def int lastCol = sheet.getColumns() -1
+
+// get all user names and store in users property step
+def int usrIndex = 0
+(1 .. lastRow).each { row ->
+ currentValue = sheet.getCell(1, row).getContents()
+ Values.setPropertyValue(usrIndex.toString(),currentValue)
+ currentAnswer = sheet.getCell(2, row).getContents()
+ Answers.setPropertyValue(usrIndex.toString(),currentAnswer)
+ usrIndex++
+}
+wb.close()
+// Set up start value for test loops
+testRunner.testCase.setPropertyValue("rowindex", "0")
+def firstValue = testRunner.testCase.getTestStepByName("Values").getPropertyValue("0")
+testRunner.testCase.setPropertyValue("value", firstValue)
+def firstAnswer = testRunner.testCase.getTestStepByName("Answers").getPropertyValue("0")
+testRunner.testCase.setPropertyValue("answer", firstAnswer)
+</script></con:config></con:testStep><con:testStep type="properties" name="Values" id="acca9f68-2892-4789-bd43-6853180518c9"><con:settings/><con:config xsi:type="con:PropertiesStep" saveFirst="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:properties><con:property><con:name>0</con:name><con:value>1</con:value></con:property><con:property><con:name>1</con:name><con:value>2</con:value></con:property><con:property><con:name>2</con:name><con:value>3</con:value></con:property><con:property><con:name>3</con:name><con:value>4</con:value></con:property><con:property><con:name>4</con:name><con:value>5</con:value></con:property><con:property><con:name>5</con:name><con:value>6</con:value></con:property><con:property><con:name>6</con:name><con:value>7</con:value></con:property><con:property><con:name>7</con:name><con:value>8</con:value></con:property><con:property><con:name>8</con:name><con:value>9</con:value></con:property><con:property><con:name>9</con:name><con:value>10</con:value></con:property><con:property><con:name>10</con:name><con:value>11</con:value></con:property><con:property><con:name>11</con:name><con:value>12</con:value></con:property></con:properties></con:config></con:testStep><con:testStep type="properties" name="Answers" id="e4aab1bc-a015-4bb5-b011-bba36025fe0a"><con:settings/><con:config xsi:type="con:PropertiesStep" saveFirst="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:properties><con:property><con:name>0</con:name><con:value>Nikodemus</con:value></con:property><con:property><con:name>1</con:name><con:value>Rutger</con:value></con:property><con:property><con:name>2</con:name><con:value>Ingemar</con:value></con:property><con:property><con:name>3</con:name><con:value>Holmfrid</con:value></con:property><con:property><con:name>4</con:name><con:value>Bo</con:value></con:property><con:property><con:name>5</con:name><con:value>Gustav</con:value></con:property><con:property><con:name>6</con:name><con:value>Robert</con:value></con:property><con:property><con:name>7</con:name><con:value>Salomon</con:value></con:property><con:property><con:name>8</con:name><con:value>Börje</con:value></con:property><con:property><con:name>9</con:name><con:value>Svante</con:value></con:property><con:property><con:name>10</con:name><con:value>Bertil</con:value></con:property><con:property><con:name>11</con:name><con:value>Eskil</con:value></con:property></con:properties></con:config></con:testStep><con:testStep type="httprequest" name="GetNameForDay" id="e6ae20e5-db7a-4c50-8cda-f0b43430c738"><con:settings/><con:config method="GET" xsi:type="con:HttpRequest" id="f1f984cd-c60c-49c9-a646-ae7ec98a3f06" name="GetNameForDay" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:endpoint>https://api.abalin.net/namedays?country=se&amp;month=6&amp;day=${#TestCase#value}</con:endpoint><con:request/><con:assertion type="GroovyScriptAssertion" id="3dfed922-766a-4ba8-b049-4bdc2de631b3" name="Script Assertion"><con:configuration><scriptText>import groovy.json.JsonSlurper 
+def response = messageExchange.response.responseContent
+//log.info response
+def slurper = new JsonSlurper()
+def json = slurper.parseText response
+//log.info json
+log.info json.data.namedays.se
+def answ = context.testCase.getPropertyValue("answer")
+assert json.data.namedays.se == answ</scriptText></con:configuration></con:assertion><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters/></con:config></con:testStep><con:testStep type="groovy" name="Increment and Loop" id="0f554cd0-f9a8-469c-bfbf-5ab67589972e"><con:settings/><con:config><script>def valuesStep = testRunner.testCase.getTestStepByName("Values")
+def int nbrOfValues = valuesStep.getPropertyCount()
+
+def answersStep = testRunner.testCase.getTestStepByName("Answers")
+
+def int rowindex = testRunner.testCase.getPropertyValue("rowindex").toInteger()
+def int nextIndex = rowindex + 1
+
+if (nextIndex &lt; nbrOfValues) {
+ testRunner.testCase.setPropertyValue("rowindex", nextIndex.toString())
+ def nextValue = valuesStep.getPropertyValue(nextIndex.toString())
+ log.info nextValue
+ testRunner.testCase.setPropertyValue("value", nextValue)
+ def nextAnswer = answersStep.getPropertyValue(nextIndex.toString())
+ log.info nextAnswer
+ testRunner.testCase.setPropertyValue("answer", nextAnswer)
+
+ //Loop to Request Step
+ testRunner.gotoStepByName( "GetNameForDay")
+} else {
+ log.info 'all values tested'
+ testRunner.testCase.setPropertyValue("value", 'all values tested')
+ //To get finnished text from soapui last in logg
+ Thread.sleep(1000)
+}
+</script></con:config></con:testStep><con:testStep type="groovy" name="Groovy Script" id="fdcbfea5-05dc-4237-aa7f-78441daa8dfc" disabled="true"><con:settings/><con:config><script>import se.cag.test.soapui.DataDrivenTestsUtil
+
+DataDrivenTestsUtil myDdUtil = new DataDrivenTestsUtil (log, testRunner, context)
+myDdUtil.create1DTestSteps(testRunner.testCase, "Users.xls")
+</script></con:config></con:testStep><con:testStep type="groovy" name="path" id="918f8d7c-d656-4d66-9689-65434009b417" disabled="true"><con:settings/><con:config><script>def projectPath = new com.eviware.soapui.support.GroovyUtils(context).projectPath //gets the path of the project root
+log.info projectPath</script></con:config></con:testStep><con:properties><con:property><con:name>rowindex</con:name><con:value>11</con:value></con:property><con:property><con:name>value</con:name><con:value>all values tested</con:value></con:property><con:property><con:name>answer</con:name><con:value>Eskil</con:value></con:property></con:properties></con:testCase><con:properties/></con:testSuite><con:properties/><con:wssContainer/><con:oAuth2ProfileContainer/><con:oAuth1ProfileContainer/><con:sensitiveInformation/></con:soapui-project>

@@ -65,10 +65,10 @@ public class DataDrivenTestsUtil {
 		WsdlTestStep loopStep = inTestCase.addTestStep(groovyLoopCfg);
 
 		// put script text into scripts
-//		String setup1DTxt = getSetup1DTxt(excelFileName);
-//		String incrAndLoopTxt = getIncrAndLoopTxt();
-		String setup1DTxt = getScriptAsString("Setup 1D.groovy");
-		String incrAndLoopTxt = getScriptAsString("Increment and Loop.groovy");
+		String setup1DTxt = getSetup1DTxt(excelFileName);
+		String incrAndLoopTxt = getIncrAndLoopTxt();
+//		String setup1DTxt = getScriptAsString("Setup 1D.groovy");
+//		String incrAndLoopTxt = getScriptAsString("Increment and Loop.groovy");
 		setupStep.setPropertyValue("script", setup1DTxt);
 		loopStep.setPropertyValue("script", incrAndLoopTxt);
 	}
